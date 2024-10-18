@@ -1,0 +1,88 @@
+TaintEMU is a whole-system emulator with taint engine.
+
+CHANGES:
+
+[X] Add build option --enable-taint-engine
+    [M] meson.build
+    [M] meson_options.txt
+    [M] scripts/meson-buildoptions.sh
+    [A] tcg/taint (DIR)
+    [A] tcg/taint/tcg*
+
+[X] Shadow memory 
+    [M] include/exec/ramblock.h
+    [M] system/memory.c
+    [M] include/exec/memory.h
+    [M] system/physmem.c
+    [M] accel/tcg/cputlb.c
+    [A] accel/tcg/ldst_shadow.c.inc
+    [M] include/exec/cpu_ldst.h
+    [A] taint (DIR)
+    [A] taint/cpu.h.inc
+    [M] include/hw/core/cpu.h
+    [M] tcg/taint/tcg-target.c.inc
+
+[X] Taint tracking
+    [A] include/tcg/tcg-taint.h
+    [M] tcg/taint/tcg-target.c.inc
+    [M] tcg/tcg.c
+    [M] tcg/tcg.h
+
+API:
+
+uint32_t cpu_ldub_taint(CPUArchState *env, abi_ptr ptr);
+int cpu_ldsb_taint(CPUArchState *env, abi_ptr ptr);
+uint32_t cpu_lduw_be_taint(CPUArchState *env, abi_ptr ptr);
+int cpu_ldsw_be_taint(CPUArchState *env, abi_ptr ptr);
+uint32_t cpu_ldl_be_taint(CPUArchState *env, abi_ptr ptr);
+uint64_t cpu_ldq_be_taint(CPUArchState *env, abi_ptr ptr);
+uint32_t cpu_lduw_le_taint(CPUArchState *env, abi_ptr ptr);
+int cpu_ldsw_le_taint(CPUArchState *env, abi_ptr ptr);
+uint32_t cpu_ldl_le_taint(CPUArchState *env, abi_ptr ptr);
+uint64_t cpu_ldq_le_taint(CPUArchState *env, abi_ptr ptr);
+
+void cpu_stb_taint(CPUArchState *env, abi_ptr ptr, uint32_t val);
+void cpu_stw_be_taint(CPUArchState *env, abi_ptr ptr, uint32_t val);
+void cpu_stl_be_taint(CPUArchState *env, abi_ptr ptr, uint32_t val);
+void cpu_stq_be_taint(CPUArchState *env, abi_ptr ptr, uint64_t val);
+void cpu_stw_le_taint(CPUArchState *env, abi_ptr ptr, uint32_t val);
+void cpu_stl_le_taint(CPUArchState *env, abi_ptr ptr, uint32_t val);
+void cpu_stq_le_taint(CPUArchState *env, abi_ptr ptr, uint64_t val);
+
+void taint_write_notify (uint64_t addr, uint64_t taint, uint64_t val, CPUArchState *env);
+void taint_read_notify (uint64_t addr, uint64_t taint, uint64_t val, CPUArchState *env);
+void taint_exec_notify (uint64_t addr, uint64_t taint); 
+
+
+XEMU is a whole-system emulator with virtual machine introspection functions.
+
+CHANGES:
+
+[X] Add build option --enable-x-ray
+    [M] meson.build
+    [M] meson_options.txt
+    [M] scripts/meson-buildoptions.sh
+    [A] x-ray (DIR)
+    [A] x-ray/x-ray.c
+    [A] x-ray/stubs-system.c
+    [A] x-ray/meson.build
+    [A] x-ray/x-ray-internal.h
+
+[X] Parse TVM information
+    [A] include/sysemu/x-ray.h
+    [M] x-ray/x-ray-internal.h
+    [M] x-ray/x-ray.c
+
+[X] Enable DBI
+    [M] target/arm/tcg/translate-a64.c
+    [A] include/tcg/x-ray-helper.h
+    [A] x-ray/callback.c
+    [A] target/arm/helper.h
+    
+[X] Enable QMP Interface
+    [M] x-ray/x-ray.c
+    [A] qapi/misc.json
+
+TaintEMU-VMI is a whole-system emulator with taint tracking and VMI functions.
+
+MERGE XEMU and TaintEMU.
